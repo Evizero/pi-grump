@@ -1,6 +1,6 @@
 import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { loadConfig, saveConfigPatch } from "./config/store.js";
-import { getSelectionCompletionValues, getSelectionHelpText, makeIdentity, makeIdentityFromSelection } from "./domain/identity.js";
+import { getSelectionCompletionValues, getSelectionHelpText, makeFirstManifestIdentity, makeIdentity, makeIdentityFromSelection } from "./domain/identity.js";
 import type { RuntimeState, TriggerEvent, GrumpConfig } from "./domain/types.js";
 import {
   AMBIENT_TOOL_CHANCE,
@@ -519,7 +519,7 @@ export default function piGrumpExtension(pi: ExtensionAPI): void {
       }
 
       if (!rawArgs && !state.identity) {
-        await manifestIdentity(ctx, makeIdentity(), true);
+        await manifestIdentity(ctx, makeFirstManifestIdentity(), true);
         return;
       }
       if (sub === "status") {

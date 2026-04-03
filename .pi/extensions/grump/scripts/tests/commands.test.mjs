@@ -41,6 +41,27 @@ test('grump set persists identity and status can be shown from config', async ()
   });
 });
 
+test('first /grump manifests Gramps, while reset still rolls randomly', async () => {
+  await withTempDir(async (cwd) => {
+    const { command, ctx } = setupExtension(cwd);
+    const originalRandom = Math.random;
+    Math.random = () => 0.95;
+    try {
+      await command.handler('', ctx);
+      let saved = await readProjectConfig(cwd);
+      assert.equal(saved.identity?.name, 'Gramps');
+      assert.equal(saved.identity?.rarity, 'Legendary');
+
+      await command.handler('reset', ctx);
+      saved = await readProjectConfig(cwd);
+      assert.notEqual(saved.identity?.name, 'Gramps');
+      assert.notEqual(saved.identity?.rarity, 'Legendary');
+    } finally {
+      Math.random = originalRandom;
+    }
+  });
+});
+
 test('grump off and on persist muted/enabled flags', async () => {
   await withTempDir(async (cwd) => {
     const { command, ctx } = setupExtension(cwd);

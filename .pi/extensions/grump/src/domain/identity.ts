@@ -78,7 +78,7 @@ function findRarityForSpriteVariant(spriteVariant: string): Exclude<Rarity, "Leg
   return null;
 }
 
-function createLegendaryIdentity(selection: LegendaryId): GrumpIdentity {
+export function createLegendaryIdentity(selection: LegendaryId): GrumpIdentity {
   if (selection === "gramps") {
     return {
       rarity: "Legendary",
@@ -151,6 +151,10 @@ export function getSelectionHelpText(): string {
     `epic names: ${NON_LEGENDARY_NAMES.Epic.join(", ")}`,
     `sprites: ${[...SPRITE_VARIANTS_BY_RARITY.Common, ...SPRITE_VARIANTS_BY_RARITY.Rare, ...SPRITE_VARIANTS_BY_RARITY.Epic].join(", ")}`,
   ].join("\n");
+}
+
+export function makeFirstManifestIdentity(): GrumpIdentity {
+  return createLegendaryIdentity("gramps");
 }
 
 export function makeIdentity(): GrumpIdentity {
