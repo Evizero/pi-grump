@@ -1,9 +1,9 @@
+![banner](./banner.png)
+
 # pi-grump
 
 Other coding harnesses might get a buddy. A friendly and cute companion. But who needs cute if there is slop to produce.
 So here we are. It is 2026 and I actually took time out of my day to write for you `pi-grump`.
-
-![banner](./banner.png)
 
 In a worldview of minimal core, explicit files, composable extensions, and skepticism toward magic, a true companion
 for pi should share those values instead of contradicting them. Other sidecar buddy concepts in other tools lean toward cheerful encouragement and ambient delight. Well, delight yourself on your own time.
