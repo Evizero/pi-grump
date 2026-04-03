@@ -1,0 +1,24 @@
+{
+  "name": "pi-grump",
+  "private": true,
+  "type": "module",
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": ">=0.64.0",
+    "@mariozechner/pi-ai": ">=0.64.0",
+    "@mariozechner/pi-tui": ">=0.64.0"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "file:/opt/homebrew/lib/node_modules/@mariozechner/pi-coding-agent",
+    "@mariozechner/pi-ai": "file:/opt/homebrew/lib/node_modules/@mariozechner/pi-coding-agent/node_modules/@mariozechner/pi-ai",
+    "@mariozechner/pi-tui": "file:/opt/homebrew/lib/node_modules/@mariozechner/pi-coding-agent/node_modules/@mariozechner/pi-tui",
+    "@types/node": "^24.5.2"
+  },
+  "pi": {
+    "extensions": ["./src/index.ts"]
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test ./scripts/tests/*.test.mjs && node ./scripts/smoke.mjs"
+  }
+}

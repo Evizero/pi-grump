@@ -1,0 +1,21 @@
+# OS/editor noise
+.DS_Store
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+.pi/extensions/grump/node_modules/
+
+# Build/test output
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Local pi/runtime state
+.pi/agent/

@@ -1,0 +1,44 @@
+{
+  "name": "pi-grump",
+  "version": "0.1.0",
+  "description": "A sparse grumpy sidecar extension package for pi",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi",
+    "terminal",
+    "coding-agent"
+  ],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-tui": "*"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-tui": "*",
+    "@types/node": "^24.5.2"
+  },
+  "files": [
+    ".pi/extensions/grump/src",
+    ".pi/extensions/grump/prompts",
+    ".pi/extensions/grump/scripts",
+    ".pi/extensions/grump/README.md",
+    ".pi/extensions/grump/tsconfig.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./.pi/extensions/grump/src/index.ts"
+    ]
+  },
+  "scripts": {
+    "build": "tsc -p ./.pi/extensions/grump/tsconfig.json",
+    "lint": "tsc -p ./.pi/extensions/grump/tsconfig.json --noEmit",
+    "test": "npm run build && node --test ./.pi/extensions/grump/scripts/tests/*.test.mjs && node ./.pi/extensions/grump/scripts/smoke.mjs"
+  }
+}

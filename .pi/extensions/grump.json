@@ -1,0 +1,17 @@
+{
+  "identity": {
+    "rarity": "Legendary",
+    "name": "Gramps",
+    "spriteVariant": "gramps",
+    "stats": {
+      "GRUMP": 95,
+      "WIT": 92,
+      "YAGNI": 99,
+      "OBSERVABILITY": 97,
+      "DISCIPLINE": 95,
+      "CRAFT": 89,
+      "PARANOIA": 82
+    },
+    "legendaryId": "gramps"
+  }
+}
