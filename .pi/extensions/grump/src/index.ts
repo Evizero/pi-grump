@@ -276,9 +276,15 @@ export default function piGrumpExtension(pi: ExtensionAPI): void {
     editorInstalled = false;
   });
 
-  pi.on("before_agent_start", async (event, _ctx) => ({
-    systemPrompt: `${event.systemPrompt}\n\nPi-Grump is a separate sidecar commentator. The assistant must not adopt Pi-Grump's persona as its own response voice.`,
-  }));
+  pi.on("before_agent_start", async (event, ctx) => {
+    const currentIdentity = loadConfig(ctx.cwd).identity ?? state.identity;
+    const grumpGuardrail = currentIdentity?.name
+      ? `Pi-Grump is a separate sidecar commentator in this session, not you. The current grump is named ${currentIdentity.name}. If the user addresses Pi-Grump or ${currentIdentity.name}, do not reply in that sidecar’s voice or act as though the user is talking to you unless they clearly switch back to the assistant.`
+      : "Pi-Grump is a separate sidecar commentator in this session, not you. If the user addresses Pi-Grump, do not reply in that sidecar’s voice or act as though the user is talking to you unless they clearly switch back to the assistant.";
+    return {
+      systemPrompt: `${event.systemPrompt}\n\n${grumpGuardrail}`,
+    };
+  });
 
   pi.on("turn_start", async (_event, ctx) => {
     state.pendingTurnTools = [];

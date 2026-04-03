@@ -56,14 +56,25 @@ function widgetContains(widgets, pattern) {
   return widgets.some((entry) => Array.isArray(entry.value) && pattern.test(normalizeRenderedText(entry.value.join('\n'))));
 }
 
-test('before_agent_start appends the anti-persona system prompt guardrail', async () => {
+test('before_agent_start appends the sidecar guardrail with the current grump name', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, {
+      identity: {
+        rarity: 'Legendary',
+        legendaryId: 'gramps',
+        name: 'Gramps',
+        spriteVariant: 'gramps',
+        stats: { GRUMP: 95, WIT: 92, YAGNI: 99, OBSERVABILITY: 97, DISCIPLINE: 95, CRAFT: 89, PARANOIA: 82 },
+      },
+    });
     const { fakePi, ctx } = setupExtension(cwd, { hasUI: false });
     const handler = fakePi.events.get('before_agent_start');
     const result = await handler({ systemPrompt: 'Base prompt' }, ctx);
 
     assert.match(result.systemPrompt, /^Base prompt/);
-    assert.match(result.systemPrompt, /must not adopt Pi-Grump's persona/i);
+    assert.match(result.systemPrompt, /Pi-Grump is a separate sidecar commentator in this session, not you\./);
+    assert.match(result.systemPrompt, /The current grump is named Gramps\./);
+    assert.match(result.systemPrompt, /If the user addresses Pi-Grump or Gramps, do not reply in that sidecar’s voice/i);
   });
 });
 
