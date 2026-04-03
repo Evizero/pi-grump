@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { importDist, makeExtensionCtx, makeFakePi, readProjectConfig, withTempDir } from './helpers.mjs';
+import { importDist, makeExtensionCtx, makeFakePi, readProjectConfig, withTempDir, writeProjectConfig } from './helpers.mjs';
 
 const extensionMod = await importDist('index.js');
 
@@ -26,6 +26,7 @@ function setupExtension(cwd) {
 
 test('grump set persists identity and status can be shown from config', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null });
     const { command, ctx, notifications } = setupExtension(cwd);
 
     await command.handler('set gramps', ctx);
@@ -43,6 +44,7 @@ test('grump set persists identity and status can be shown from config', async ()
 
 test('first /grump manifests Gramps, while reset still rolls randomly', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null });
     const { command, ctx } = setupExtension(cwd);
     const originalRandom = Math.random;
     Math.random = () => 0.95;
@@ -64,6 +66,7 @@ test('first /grump manifests Gramps, while reset still rolls randomly', async ()
 
 test('grump off and on persist muted/enabled flags', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null });
     const { command, ctx } = setupExtension(cwd);
 
     await command.handler('off', ctx);
@@ -79,6 +82,7 @@ test('grump off and on persist muted/enabled flags', async () => {
 
 test('grump model configured persists provider and model choice', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null });
     const { command, ctx } = setupExtension(cwd);
 
     await command.handler('model configured openai gpt-test', ctx);
@@ -92,6 +96,7 @@ test('grump model configured persists provider and model choice', async () => {
 
 test('grump whisper works once an identity exists and local-only mode is set', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null });
     const { command, ctx, notifications } = setupExtension(cwd);
 
     await command.handler('set gramps', ctx);

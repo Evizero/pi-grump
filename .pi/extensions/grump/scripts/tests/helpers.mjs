@@ -11,6 +11,11 @@ export async function importDist(...parts) {
   return import(href);
 }
 
+export async function importDistFresh(...parts) {
+  const href = `${pathToFileURL(path.join(DIST_DIR, ...parts)).href}?t=${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return import(href);
+}
+
 export function makeBaseConfig(overrides = {}) {
   return {
     enabled: true,

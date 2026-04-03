@@ -1,12 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { importDist, withTempDir } from './helpers.mjs';
+import path from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { importDist, importDistFresh, withTempDir, writeProjectConfig } from './helpers.mjs';
 
 const store = await importDist('config', 'store.js');
 const text = await importDist('utils', 'text.js');
 
 test('saveConfigPatch deep-merges nested reaction model settings and preserves defaults on load', async () => {
   await withTempDir(async (cwd) => {
+    await writeProjectConfig(cwd, {});
     await store.saveConfigPatch(cwd, {
       commentary: {
         reactionModel: {
@@ -30,6 +33,37 @@ test('saveConfigPatch deep-merges nested reaction model settings and preserves d
     assert.equal(loaded.commentary.reactionModel.model, 'gpt-test');
     assert.equal(loaded.commentary.reactionModel.allowActiveModelFallback, false);
     assert.equal(loaded.commentary.reactionModel.allowLocalFallback, true);
+  });
+});
+
+test('saveConfigPatch writes global by default and only writes project-local when a project grump config already exists', async () => {
+  await withTempDir(async (cwd) => {
+    const originalAgentDir = process.env.PI_CODING_AGENT_DIR;
+    process.env.PI_CODING_AGENT_DIR = path.join(cwd, 'agent-home');
+    try {
+      const freshStore = await importDistFresh('config', 'store.js');
+      const globalConfigPath = freshStore.GLOBAL_CONFIG_PATH;
+      const projectConfigPath = freshStore.projectConfigPath(cwd);
+
+      await freshStore.saveConfigPatch(cwd, { muted: true });
+      const globalAfterFirstWrite = JSON.parse(await readFile(globalConfigPath, 'utf8'));
+      assert.deepEqual(globalAfterFirstWrite, { muted: true });
+      assert.equal(freshStore.resolveConfigWritePath(cwd), globalConfigPath);
+
+      await writeProjectConfig(cwd, { enabled: false });
+      assert.equal(freshStore.resolveConfigWritePath(cwd), projectConfigPath);
+      await freshStore.saveConfigPatch(cwd, { muted: false });
+
+      const projectAfterWrite = JSON.parse(await readFile(projectConfigPath, 'utf8'));
+      assert.equal(projectAfterWrite.enabled, false);
+      assert.equal(projectAfterWrite.muted, false);
+
+      const globalAfterProjectWrite = JSON.parse(await readFile(globalConfigPath, 'utf8'));
+      assert.deepEqual(globalAfterProjectWrite, { muted: true });
+    } finally {
+      if (originalAgentDir === undefined) delete process.env.PI_CODING_AGENT_DIR;
+      else process.env.PI_CODING_AGENT_DIR = originalAgentDir;
+    }
   });
 });
 

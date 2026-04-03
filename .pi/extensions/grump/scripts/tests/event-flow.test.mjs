@@ -98,7 +98,7 @@ test('session_start shows a teaser widget when no identity exists', async () => 
 
 test('message_end emits a name-mentioned reaction for direct grump mentions', async () => {
   await withTempDir(async (cwd) => {
-    await writeProjectConfig(cwd, { commentary: { cooldownMs: 0 }, ui: { minColsFullSprite: 1, reactionShowMs: 100, reactionFadeMs: 20 } });
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null, commentary: { cooldownMs: 0 }, ui: { minColsFullSprite: 1, reactionShowMs: 100, reactionFadeMs: 20 } });
     const { fakePi, command, ctx, widgets } = setupExtension(cwd, { hasUI: true });
 
     await withRpcMode(async () => {
@@ -123,7 +123,7 @@ test('message_end emits a name-mentioned reaction for direct grump mentions', as
 
 test('tool_call input is reused by turn_end nomination after tool_execution_end', async () => {
   await withTempDir(async (cwd) => {
-    await writeProjectConfig(cwd, { commentary: { cooldownMs: 0 }, ui: { minColsFullSprite: 1, reactionShowMs: 100, reactionFadeMs: 20 } });
+    await writeProjectConfig(cwd, { enabled: true, muted: false, identity: null, commentary: { cooldownMs: 0 }, ui: { minColsFullSprite: 1, reactionShowMs: 100, reactionFadeMs: 20 } });
     const { fakePi, command, ctx, widgets } = setupExtension(cwd, { hasUI: true });
     const originalRandom = Math.random;
     Math.random = () => 1;

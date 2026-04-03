@@ -58,9 +58,14 @@ export function loadConfig(cwd?: string): GrumpConfig {
   return deepMerge(deepMerge(DEFAULT_CONFIG, global), project);
 }
 
+export function resolveConfigWritePath(cwd?: string): string {
+  const projectPath = cwd ? projectConfigPath(cwd) : undefined;
+  if (projectPath && existsSync(projectPath)) return projectPath;
+  return GLOBAL_CONFIG_PATH;
+}
+
 export async function saveConfigPatch(cwd: string | undefined, patch: Partial<GrumpConfig>): Promise<void> {
-  if (cwd) await writeJson(projectConfigPath(cwd), patch);
-  else await writeJson(GLOBAL_CONFIG_PATH, patch);
+  await writeJson(resolveConfigWritePath(cwd), patch);
 }
 
 export function loadPrompt(name: string): string {
